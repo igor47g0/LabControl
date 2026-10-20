@@ -59,7 +59,6 @@ API REST em **Java 17** e **Spring Boot 3** desenvolvida para o gerenciamento e 
 * **Patrimônio Único:** Não é permitido cadastrar ou atualizar dois equipamentos com o mesmo número de patrimônio (Retorna `409 Conflict`).
 
 
-================================================================================
 DOCUMENTO DE REFLEXÃO CRÍTICA - LABCONTROL
 ================================================================================
 
