@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LabControl - Gestão de Equipamentos de Laboratório</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Barra Superior de Notificações -->
+  <div class="announcement-bar">
+    <div class="container announcement-content">
+      <span class="badge-pulse"></span>
+      <span>Repositório GitHub: 
+        <a href="https://github.com/igor47g0/LabControl" target="_blank" rel="noopener noreferrer">igor47g0/LabControl</a>
+      </span>
+      <span class="pill-tag" id="connection-status-tag">Carregando...</span>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="#hero" class="brand">
+        <img src="logo.svg" alt="LabControl Logo" class="brand-logo" onerror="this.src='logo.png'">
+      </a>
+      
+      <nav class="nav-links">
+        <a href="#gerenciamento">Gerenciar Equipamentos</a>
+        <a href="#endpoints">Endpoints da API</a>
+        <a href="http://localhost:8080/swagger-ui.html" target="_blank" class="nav-swagger">Swagger UI</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="https://github.com/igor47g0/LabControl" target="_blank" rel="noopener noreferrer" class="btn btn-github">
+          <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Resumido -->
+  <section id="hero" class="hero-section">
+    <div class="container hero-container">
+      <div class="hero-content">
+        <div class="tech-pill-group">
+          <span class="tech-pill">Java 17+</span>
+          <span class="tech-pill">Spring Boot 3.3</span>
+          <span class="tech-pill">Spring Data JPA</span>
+          <span class="tech-pill">MySQL</span>
+          <span class="tech-pill">Bean Validation</span>
+        </div>
+        
+        <h1 class="hero-title">
+          Sistema de Controle de <span class="highlight-gradient">Equipamentos de Laboratório</span>
+        </h1>
+        
+        <p class="hero-subtitle">
+          Adicione, consulte, edite e remova equipamentos do laboratório com validações automáticas de unicidade patrimonial e tratamento completo de respostas HTTP.
+        </p>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-image-wrapper">
+          <img src="hero-lab.svg" alt="Ilustração do Laboratório" class="hero-svg">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contadores Estatísticos -->
+  <section class="stats-section">
+    <div class="container stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-blue">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+        </div>
+        <div>
+          <div class="stat-value" id="stat-total-items">0</div>
+          <div class="stat-label">Equipamentos Cadastrados</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-green">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="stat-value" id="stat-total-stock">0</div>
+          <div class="stat-label">Unidades em Estoque</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-purple">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="stat-value" id="stat-categories">0</div>
+          <div class="stat-label">Categorias Ativas</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-amber">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <div>
+          <div class="stat-value" id="stat-low-stock">0</div>
+          <div class="stat-label">Itens com Estoque Zerado</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Área de Gerenciamento: Adicionar e Listar Equipamentos -->
+  <section id="gerenciamento" class="management-section">
+    <div class="container">
+      
+      <div class="management-layout">
+        
+        <!-- CARD ESQUERDA: Formulário de Adicionar / Editar Equipamento -->
+        <div class="form-panel-card">
+          <div class="panel-header">
+            <div class="panel-header-icon" id="form-icon">➕</div>
+            <div>
+              <h3 id="form-card-title">Adicionar Equipamento</h3>
+              <p id="form-card-subtitle">Preencha os campos para cadastrar no inventário.</p>
+            </div>
+          </div>
+
+          <form id="inline-equipment-form">
+            <input type="hidden" id="form-id">
+
+            <!-- Campo Nome -->
+            <div class="form-group">
+              <label for="form-nome">
+                Nome do Equipamento <span class="required">*</span>
+              </label>
+              <input type="text" id="form-nome" required minlength="3" maxlength="100" placeholder="Ex: Microscópio Binocular 1000x">
+              <div class="input-info">
+                <span class="field-help">De 3 a 100 caracteres.</span>
+                <span class="char-count" id="nome-char-count">0/100</span>
+              </div>
+              <span class="field-error" id="error-nome"></span>
+            </div>
+
+            <!-- Campo Nº Patrimônio -->
+            <div class="form-group">
+              <label for="form-patrimonio">
+                Número de Patrimônio <span class="required">*</span>
+              </label>
+              <div class="input-prefix-box">
+                <span class="input-prefix">PAT</span>
+                <input type="text" id="form-patrimonio" required placeholder="Ex: PAT-00101">
+              </div>
+              <span class="field-help">Identificador único obrigatório.</span>
+              <span class="field-error" id="error-patrimonio"></span>
+            </div>
+
+            <!-- Campo Categoria com sugestões -->
+            <div class="form-group">
+              <label for="form-categoria">
+                Categoria <span class="required">*</span>
+              </label>
+              <input type="text" id="form-categoria" list="category-suggestions" required placeholder="Ex: Óptica, Espectrometria">
+              <datalist id="category-suggestions">
+                <option value="Óptica">
+                <option value="Espectrometria">
+                <option value="Centrifugação">
+                <option value="Pesagem">
+                <option value="Esterilização">
+                <option value="Eletroquímica">
+                <option value="Agitação & Mistura">
+              </datalist>
+              <span class="field-help">Selecione uma sugestão ou digite uma nova.</span>
+              <span class="field-error" id="error-categoria"></span>
+            </div>
+
+            <!-- Campo Quantidade -->
+            <div class="form-group">
+              <label for="form-quantidade">
+                Quantidade em Estoque <span class="required">*</span>
+              </label>
+              <div class="quantity-stepper">
+                <button type="button" class="btn-step" id="btn-qty-minus">-</button>
+                <input type="number" id="form-quantidade" required min="0" value="1">
+                <button type="button" class="btn-step" id="btn-qty-plus">+</button>
+              </div>
+              <span class="field-help">Número inteiro maior ou igual a 0.</span>
+              <span class="field-error" id="error-quantidade"></span>
+            </div>
+
+            <!-- Botões de Ação do Formulário -->
+            <div class="form-actions-box">
+              <button type="submit" class="btn btn-primary btn-block" id="btn-form-submit">
+                <span class="btn-text" id="btn-form-text">➕ Cadastrar Equipamento</span>
+              </button>
+              <button type="button" class="btn btn-secondary btn-block" id="btn-form-cancel" style="display:none;">
+                Cancelar Edição
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- CARD DIREITA: Lista de Equipamentos & Remoção -->
+        <div class="table-panel-card">
+          <div class="table-panel-header">
+            <div>
+              <h3>Inventário de Equipamentos</h3>
+              <p>Pesquise, visualize, edite ou remova itens do acervo.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-reload" title="Atualizar dados">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+              Recarregar
+            </button>
+          </div>
+
+          <!-- Barra de Busca e Filtro de Categoria -->
+          <div class="search-filter-bar">
+            <div class="search-box">
+              <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" id="filter-search" placeholder="Buscar por nome, patrimônio ou categoria...">
+            </div>
+
+            <select id="filter-category" class="select-control">
+              <option value="">Todas as Categorias</option>
+            </select>
+          </div>
+
+          <!-- Tabela de Equipamentos -->
+          <div class="table-responsive">
+            <table class="data-table" id="equipamentos-table">
+              <thead>
+                <tr>
+                  <th width="60">ID</th>
+                  <th>Equipamento</th>
+                  <th width="140">Patrimônio</th>
+                  <th width="130">Categoria</th>
+                  <th width="90" class="text-center">Qtd</th>
+                  <th width="105" class="text-center">Status</th>
+                  <th width="150" class="text-center">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+                <tr>
+                  <td colspan="7" class="loading-state">
+                    <div class="spinner"></div>
+                    <span>Carregando inventário...</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Seção de Endpoints REST -->
+  <section id="endpoints" class="endpoints-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-tag">Contrato RESTful</span>
+        <h2 class="section-title">Endpoints Disponíveis na API</h2>
+        <p class="section-subtitle">Conexão direta com Spring Boot 3.3 e tratamento de erros padronizado.</p>
+      </div>
+
+      <div class="endpoints-grid">
+        <div class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method-badge method-post">POST</span>
+            <span class="endpoint-path">/equipamentos</span>
+          </div>
+          <p class="endpoint-desc">Cadastra novo equipamento. Retorno: <strong>201 Created</strong> com o JSON criado.</p>
+          <div class="endpoint-status-codes">
+            <span class="status-badge status-201">201 Created</span>
+            <span class="status-badge status-400">400 Bad Request</span>
+            <span class="status-badge status-409">409 Conflict</span>
+          </div>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method-badge method-get">GET</span>
+            <span class="endpoint-path">/equipamentos</span>
+          </div>
+          <p class="endpoint-desc">Lista todos os equipamentos cadastrados. Retorno: <strong>200 OK</strong> com lista JSON.</p>
+          <div class="endpoint-status-codes">
+            <span class="status-badge status-200">200 OK</span>
+          </div>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method-badge method-get">GET</span>
+            <span class="endpoint-path">/equipamentos/{id}</span>
+          </div>
+          <p class="endpoint-desc">Busca equipamento por ID. Retorno: <strong>200 OK</strong> ou <strong>404 Not Found</strong> se inexistente.</p>
+          <div class="endpoint-status-codes">
+            <span class="status-badge status-200">200 OK</span>
+            <span class="status-badge status-404">404 Not Found</span>
+          </div>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method-badge method-put">PUT</span>
+            <span class="endpoint-path">/equipamentos/{id}</span>
+          </div>
+          <p class="endpoint-desc">Atualiza equipamento por ID. Retorno: <strong>200 OK</strong>, <strong>404</strong> ou <strong>409</strong> (patrimônio duplicado).</p>
+          <div class="endpoint-status-codes">
+            <span class="status-badge status-200">200 OK</span>
+            <span class="status-badge status-400">400</span>
+            <span class="status-badge status-404">404</span>
+            <span class="status-badge status-409">409</span>
+          </div>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method-badge method-delete">DELETE</span>
+            <span class="endpoint-path">/equipamentos/{id}</span>
+          </div>
+          <p class="endpoint-desc">Exclui equipamento por ID. Retorno: <strong>204 No Content</strong> ou <strong>404 Not Found</strong>.</p>
+          <div class="endpoint-status-codes">
+            <span class="status-badge status-204">204 No Content</span>
+            <span class="status-badge status-404">404 Not Found</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal: Visualizar JSON -->
+  <div class="modal-overlay" id="json-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Detalhes JSON do Equipamento</h3>
+        <button class="modal-close-btn" id="btn-close-json-modal">&times;</button>
+      </div>
+      <div class="code-preview" style="max-height: 380px; overflow-y: auto;">
+        <pre><code id="json-modal-content"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="btn-copy-json">Copiar JSON</button>
+        <button class="btn btn-secondary" id="btn-dismiss-json">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Container de Toasts -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <img src="logo.svg" alt="LabControl Logo" height="34" onerror="this.src='logo.png'">
+        <p>Sistema avaliativo de gerenciamento de patrimônio e equipamentos laboratoriais.</p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Acesso Rápido</h4>
+        <a href="#gerenciamento">Gerenciamento</a>
+        <a href="#endpoints">Endpoints REST</a>
+        <a href="http://localhost:8080/swagger-ui.html" target="_blank">Swagger UI</a>
+      </div>
+
+      <div class="footer-repo">
+        <h4>Repositório Oficial</h4>
+        <a href="https://github.com/igor47g0/LabControl" target="_blank" rel="noopener noreferrer" class="repo-link-box">
+          <svg class="icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>igor47g0 / LabControl</span>
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container text-center">
+        <p>&copy; 2026 LabControl • Spring Boot 3.3 & Java 17+ • Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

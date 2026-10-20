@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="100%" height="100%">
+  <defs>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Icon Emblem (Flask + Circuit + Shield) -->
+  <g transform="translate(15, 10)">
+    <!-- Hexagonal shield base -->
+    <polygon points="40,2 75,22 75,62 40,82 5,62 5,22" fill="url(#shieldGrad)" stroke="#38bdf8" stroke-width="2.5" />
+    
+    <!-- Pulse circuit lines inside -->
+    <path d="M 12 42 H 24 L 30 26 L 38 56 L 46 36 L 52 48 L 58 42 H 68" 
+          fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.35" />
+
+    <!-- Laboratory Erlenmeyer Flask Icon -->
+    <!-- Flask Neck -->
+    <path d="M 36 20 H 44 V 32 L 56 56 C 58 60 55 64 50 64 H 30 C 25 64 22 60 24 56 L 36 32 Z" 
+          fill="none" stroke="url(#primaryGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <!-- Flask lip -->
+    <line x1="33" y1="20" x2="47" y2="20" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+    
+    <!-- Liquid in Flask with Bubbles -->
+    <path d="M 28 50 Q 34 46, 40 50 T 52 50 L 53 58 C 53 61 51 62 48 62 H 32 C 29 62 27 61 27 58 Z" 
+          fill="url(#accentGrad)" opacity="0.85" />
+    
+    <!-- Bubbles -->
+    <circle cx="35" cy="54" r="2" fill="#ffffff" opacity="0.9" filter="url(#glow)"/>
+    <circle cx="43" cy="46" r="1.5" fill="#ffffff" opacity="0.9"/>
+    <circle cx="39" cy="38" r="1.2" fill="#34d399" opacity="0.8"/>
+    
+    <!-- Glowing core node -->
+    <circle cx="40" cy="82" r="3.5" fill="#34d399" filter="url(#glow)"/>
+  </g>
+
+  <!-- Typography -->
+  <text x="105" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="34" font-weight="800" letter-spacing="-0.5" fill="#f8fafc">
+    Lab<tspan fill="url(#primaryGrad)">Control</tspan>
+  </text>
+  
+  <text x="106" y="74" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.8" fill="#94a3b8">
+    LABORATORY INVENTORY API
+  </text>
+  
+  <!-- Status pill badge -->
+  <g transform="translate(325, 36)">
+    <rect width="60" height="22" rx="11" fill="#064e3b" stroke="#059669" stroke-width="1"/>
+    <circle cx="12" cy="11" r="3.5" fill="#34d399">
+      <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="22" y="15" font-family="sans-serif" font-size="9" font-weight="700" fill="#34d399" letter-spacing="0.5">ONLINE</text>
+  </g>
+</svg>
